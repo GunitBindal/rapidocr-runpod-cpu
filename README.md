@@ -13,7 +13,16 @@ Ultra-fast OCR deployment on RunPod CPU instances with **pre-bundled PP-OCRv5 mo
 - ✅ **90+ languages**: Supports English, Chinese, Japanese, Korean, etc.
 - ✅ **No downloads**: Models bundled in Docker image
 
-## Quick Deploy
+## Deployment Options
+
+This repo supports **two deployment modes**:
+
+1. **Serverless (Queue)** - For async job processing with RunPod's queue system
+2. **Load Balancer (HTTP)** - For synchronous HTTP requests with auto-scaling
+
+---
+
+## Option 1: Serverless (Queue) Deployment
 
 ### 1. Build on RunPod
 
@@ -39,7 +48,7 @@ runpod build \
 5. Set Active Workers = 1 (or more for scaling)
 6. Deploy!
 
-### 3. Test Your Endpoint
+### 3. Test Serverless Endpoint
 
 ```bash
 # Set environment variables
@@ -51,6 +60,45 @@ pip install requests pillow pdf2image
 
 # Run batch OCR
 python3 batch_ocr.py sample.pdf --max-workers 5
+```
+
+---
+
+## Option 2: Load Balancer (HTTP) Deployment
+
+### 1. Build Load Balancer Image
+
+```bash
+# Build with Load Balancer Dockerfile
+runpod build \
+  --repo https://github.com/YOUR_USERNAME/rapidocr-runpod-cpu.git \
+  --branch main \
+  --dockerfile Dockerfile.loadbalancer \
+  --tag loadbalancer \
+  --public
+```
+
+### 2. Create Load Balancer Endpoint
+
+1. Go to https://www.runpod.io/console/serverless
+2. Click "New Endpoint"
+3. Select your built image (with `loadbalancer` tag)
+4. **Choose CPU instance**: 8-16 vCPU recommended
+5. **Endpoint Type**: Load Balancer (not Queue!)
+6. Set Active Workers = 1 (or more for auto-scaling)
+7. Deploy!
+
+### 3. Test Load Balancer Endpoint
+
+```bash
+# Set endpoint URL
+export RAPIDOCR_ENDPOINT_URL="https://your-endpoint-id.runpod.net"
+
+# Install dependencies
+pip install requests pillow pdf2image
+
+# Run test
+python3 test_loadbalancer.py sample.pdf
 ```
 
 ## API Usage

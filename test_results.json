@@ -1,0 +1,42 @@
+{
+  "endpoint": "https://rmo1fshun253ua.api.runpod.ai",
+  "input_file": "RODRIGUEZ, JUAN REPORTS_signed-2.pdf",
+  "timestamp": "2025-11-23 01:55:53",
+  "summary": {
+    "total_pages": 5,
+    "successful": 0,
+    "failed": 5,
+    "total_text_lines": 0,
+    "total_time": 7.497480869293213,
+    "avg_ocr_time": 0.0,
+    "avg_total_time": 0.0,
+    "pages_per_second": 0.6668906646335131
+  },
+  "results": [
+    {
+      "page": 1,
+      "success": false,
+      "error": "HTTP 401: "
+    },
+    {
+      "page": 2,
+      "success": false,
+      "error": "HTTP 401: "
+    },
+    {
+      "page": 3,
+      "success": false,
+      "error": "HTTP 401: "
+    },
+    {
+      "page": 4,
+      "success": false,
+      "error": "HTTP 401: "
+    },
+    {
+      "page": 5,
+      "success": false,
+      "error": "HTTP 401: "
+    }
+  ]
+}

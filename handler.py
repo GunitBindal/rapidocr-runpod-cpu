@@ -17,11 +17,17 @@ def initialize_engine():
     global OCR_ENGINE
 
     if OCR_ENGINE is None:
-        print("Loading RapidOCR engine... This takes 1-2 seconds with pre-cached models.", flush=True)
+        print("Loading RapidOCR engine with PP-OCRv5...", flush=True)
         try:
-            OCR_ENGINE = RapidOCR()
-            print("✓ RapidOCR engine loaded successfully!", flush=True)
-            print("Models: PP-OCRv4 Detection + Recognition + Classification", flush=True)
+            # Use bundled models and optimized config
+            OCR_ENGINE = RapidOCR(
+                det_model_path="/app/models/ch_PP-OCRv5_mobile_det.onnx",
+                rec_model_path="/app/models/ch_PP-OCRv5_rec_mobile_infer.onnx",
+                cls_model_path="/app/models/ch_ppocr_mobile_v2.0_cls_infer.onnx",
+                config_path="/app/config.yaml"
+            )
+            print("✓ PP-OCRv5 engine loaded successfully!", flush=True)
+            print("Models: PP-OCRv5 Mobile (21MB total, no CLS for speed)", flush=True)
         except Exception as e:
             print(f"✗ Engine loading failed: {e}", flush=True)
             raise

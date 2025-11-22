@@ -1,15 +1,17 @@
 # RapidOCR RunPod CPU Serverless
 
-Ultra-fast OCR deployment on RunPod CPU instances with pre-cached models (PP-OCRv4).
+Ultra-fast OCR deployment on RunPod CPU instances with **pre-bundled PP-OCRv5 models**.
 
 ## Features
 
 - ✅ **CPU-optimized**: Runs on cheap CPU instances ($0.10-0.20/hour)
-- ✅ **Tiny models**: PP-OCRv4 models are only 10-20MB total
-- ✅ **Pre-cached**: Models downloaded at build time for instant cold starts
+- ✅ **Latest PP-OCRv5**: Better accuracy and speed than v4
+- ✅ **Tiny bundled models**: Only 21MB total (included in repo!)
+- ✅ **Instant cold starts**: <2 seconds (models pre-bundled)
 - ✅ **Multi-threaded**: OpenMP/MKL optimizations for CPU performance
-- ✅ **Fast inference**: ~1-2 seconds per page on 8-core CPU
+- ✅ **Fast inference**: ~1-1.5 seconds per page on 8-core CPU
 - ✅ **90+ languages**: Supports English, Chinese, Japanese, Korean, etc.
+- ✅ **No downloads**: Models bundled in Docker image
 
 ## Quick Deploy
 
@@ -122,13 +124,13 @@ print(result)
 
 ## Models
 
-RapidOCR uses PaddleOCR v4 models:
+Pre-bundled PP-OCRv5 models (included in `/models/`):
 
-- **Detection**: PP-OCRv4 server (8MB)
-- **Recognition**: PP-OCRv4 mobile (4MB)
-- **Classification**: Mobile v2.0 (2MB)
+- **Detection**: PP-OCRv5 mobile (4.6MB)
+- **Recognition**: PP-OCRv5 mobile (16MB)
+- **Classification**: Mobile v2.0 (0.5MB) - disabled for speed
 
-Total: **~15MB** (10-20MB with dependencies)
+Total: **21MB** (bundled in Docker image, no download needed!)
 
 ## Deployment Notes
 

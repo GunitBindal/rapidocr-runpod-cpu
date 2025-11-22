@@ -1,14 +1,14 @@
-# RapidOCR RunPod CPU Serverless - Ultra-Fast with OpenVINO + Pre-cached Models
+# RapidOCR RunPod CPU Serverless - PP-OCRv5 Mobile with Pre-cached Models
 FROM python:3.11-slim-bookworm
 
 # Set environment variables for CPU optimization
 ENV PYTHONUNBUFFERED=1 \
     DEBIAN_FRONTEND=noninteractive \
-    # OpenVINO optimizations
+    # CPU threading optimizations (set to match vCPU count)
     OMP_NUM_THREADS=16 \
     MKL_NUM_THREADS=16 \
     OPENBLAS_NUM_THREADS=16 \
-    # RapidOCR will auto-download models to ~/.rapidocr
+    # RapidOCR models cache location
     HOME=/root
 
 # Install system dependencies
@@ -32,12 +32,13 @@ RUN pip install --no-cache-dir \
 
 WORKDIR /app
 
-# Copy handler
+# Copy files
 COPY handler.py /app/handler.py
 COPY prewarm.py /app/prewarm.py
+COPY config_v5.yaml /app/config.yaml
+COPY models/ /app/models/
 
-# Pre-download RapidOCR models (PP-OCRv4: ~10-20MB total)
-# This downloads models to ~/.rapidocr and pre-warms ONNX runtime
+# Pre-warm ONNX runtime with bundled PP-OCRv5 models (21MB total)
 RUN python3 /app/prewarm.py && rm -rf /tmp/* /root/.cache/pip /app/prewarm.py
 
 # Final cleanup

@@ -16,3 +16,4 @@ ocr_output/
 *.jpg
 *.jpeg
 .DS_Store
+# RapidOCR RunPod CPU - PP-OCRv5

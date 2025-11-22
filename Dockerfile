@@ -35,7 +35,6 @@ WORKDIR /app
 # Copy files
 COPY handler.py /app/handler.py
 COPY prewarm.py /app/prewarm.py
-COPY config_v5.yaml /app/config.yaml
 COPY models/ /app/models/
 
 # Pre-warm ONNX runtime with bundled PP-OCRv5 models (21MB total)

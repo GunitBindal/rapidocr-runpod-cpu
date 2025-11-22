@@ -18,19 +18,13 @@ def initialize_engine():
 
     if OCR_ENGINE is None:
         print("Loading RapidOCR engine with PP-OCRv5...", flush=True)
-        try:
-            # Use bundled models and optimized config
-            OCR_ENGINE = RapidOCR(
-                det_model_path="/app/models/ch_PP-OCRv5_mobile_det.onnx",
-                rec_model_path="/app/models/ch_PP-OCRv5_rec_mobile_infer.onnx",
-                cls_model_path="/app/models/ch_ppocr_mobile_v2.0_cls_infer.onnx",
-                config_path="/app/config.yaml"
-            )
-            print("✓ PP-OCRv5 engine loaded successfully!", flush=True)
-            print("Models: PP-OCRv5 Mobile (21MB total, no CLS for speed)", flush=True)
-        except Exception as e:
-            print(f"✗ Engine loading failed: {e}", flush=True)
-            raise
+        OCR_ENGINE = RapidOCR(params={
+            "Det.model_path": "/app/models/ch_PP-OCRv5_mobile_det.onnx",
+            "Rec.model_path": "/app/models/ch_PP-OCRv5_rec_mobile_infer.onnx",
+            "Cls.model_path": "/app/models/ch_ppocr_mobile_v2.0_cls_infer.onnx"
+        })
+        print("✓ PP-OCRv5 engine loaded successfully!", flush=True)
+        print("Models: PP-OCRv5 Mobile (21MB bundled)", flush=True)
 
     return OCR_ENGINE
 
@@ -72,29 +66,26 @@ def handler(job):
 
                 # Format results
                 text_lines = []
-                if result and len(result) > 0:
-                    # RapidOCR returns (boxes, txts, scores) or None
-                    boxes, txts, scores = result if len(result) == 3 else (None, None, None)
+                if result and hasattr(result, 'dt_boxes') and result.dt_boxes is not None:
+                    # RapidOCR returns object with dt_boxes, txts, scores attributes
+                    for box, text, score in zip(result.dt_boxes, result.txts, result.scores):
+                        # Convert polygon to bbox
+                        x_coords = [point[0] for point in box]
+                        y_coords = [point[1] for point in box]
+                        x_min, x_max = min(x_coords), max(x_coords)
+                        y_min, y_max = min(y_coords), max(y_coords)
 
-                    if boxes is not None and txts is not None:
-                        for box, text, score in zip(boxes, txts, scores):
-                            # Convert polygon to bbox
-                            x_coords = [point[0] for point in box]
-                            y_coords = [point[1] for point in box]
-                            x_min, x_max = min(x_coords), max(x_coords)
-                            y_min, y_max = min(y_coords), max(y_coords)
-
-                            text_lines.append({
-                                "text": text,
-                                "confidence": float(score),
-                                "bbox": {
-                                    "x": int(x_min),
-                                    "y": int(y_min),
-                                    "width": int(x_max - x_min),
-                                    "height": int(y_max - y_min)
-                                },
-                                "polygon": [[int(p[0]), int(p[1])] for p in box]
-                            })
+                        text_lines.append({
+                            "text": text,
+                            "confidence": float(score),
+                            "bbox": {
+                                "x": int(x_min),
+                                "y": int(y_min),
+                                "width": int(x_max - x_min),
+                                "height": int(y_max - y_min)
+                            },
+                            "polygon": [[int(p[0]), int(p[1])] for p in box]
+                        })
 
                 results.append({
                     "text_lines": text_lines,

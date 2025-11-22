@@ -9,15 +9,13 @@ print('🚀 Pre-warming PP-OCRv5 models...', flush=True)
 print(f'ENV: OMP_NUM_THREADS={os.getenv("OMP_NUM_THREADS", "not set")}', flush=True)
 print(f'ENV: MKL_NUM_THREADS={os.getenv("MKL_NUM_THREADS", "not set")}', flush=True)
 
-# Initialize RapidOCR with bundled models
+# Initialize RapidOCR with bundled PP-OCRv5 models
 print('📥 Loading bundled PP-OCRv5 models...', flush=True)
-engine = RapidOCR(
-    det_model_path="/app/models/ch_PP-OCRv5_mobile_det.onnx",
-    rec_model_path="/app/models/ch_PP-OCRv5_rec_mobile_infer.onnx",
-    cls_model_path="/app/models/ch_ppocr_mobile_v2.0_cls_infer.onnx",
-    config_path="/app/config.yaml"
-)
-
+engine = RapidOCR(params={
+    "Det.model_path": "/app/models/ch_PP-OCRv5_mobile_det.onnx",
+    "Rec.model_path": "/app/models/ch_PP-OCRv5_rec_mobile_infer.onnx",
+    "Cls.model_path": "/app/models/ch_ppocr_mobile_v2.0_cls_infer.onnx"
+})
 print('✅ PP-OCRv5 models loaded (21MB total)', flush=True)
 
 # Pre-warm with dummy inference to load models into memory

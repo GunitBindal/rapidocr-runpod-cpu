@@ -11,7 +11,7 @@ ENV PYTHONUNBUFFERED=1 \
     # RapidOCR models cache location
     HOME=/root
 
-# Install system dependencies
+# Install system dependencies (including OpenCV requirements)
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         build-essential \
@@ -20,11 +20,15 @@ RUN apt-get update && \
         libsm6 \
         libxext6 \
         libxrender-dev \
+        libgl1-mesa-glx \
+        libgl1 \
         curl && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install Python dependencies
-RUN pip install --no-cache-dir \
+# Install opencv-python-headless first to avoid GUI dependencies
+RUN pip install --no-cache-dir opencv-python-headless && \
+    pip install --no-cache-dir \
     rapidocr-onnxruntime==1.3.24 \
     runpod==1.8.1 \
     pillow==10.4.0 && \

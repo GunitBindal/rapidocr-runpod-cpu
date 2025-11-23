@@ -9,7 +9,7 @@ import io
 import json
 import numpy as np
 from PIL import Image
-from rapidocr_onnxruntime import RapidOCR
+from rapidocr import RapidOCR
 from flask import Flask, request, jsonify
 
 print("Starting RapidOCR HTTP Server...", flush=True)

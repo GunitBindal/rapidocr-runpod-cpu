@@ -3,7 +3,7 @@
 import os
 import numpy as np
 from PIL import Image
-from rapidocr_onnxruntime import RapidOCR
+from rapidocr import RapidOCR
 
 print('🚀 Pre-warming PP-OCRv5 models...', flush=True)
 print(f'ENV: OMP_NUM_THREADS={os.getenv("OMP_NUM_THREADS", "not set")}', flush=True)

@@ -29,7 +29,7 @@ RUN apt-get update && \
 # Install opencv-python-headless first to avoid GUI dependencies
 RUN pip install --no-cache-dir opencv-python-headless && \
     pip install --no-cache-dir \
-    rapidocr-onnxruntime==1.3.24 \
+    rapidocr==3.3.1 \
     runpod==1.8.1 \
     pillow==10.4.0 && \
     rm -rf /root/.cache/pip /tmp/*
